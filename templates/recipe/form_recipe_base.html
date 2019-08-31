@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %} Recp - Add Ingredient {% endblock %}
+{% block content %}
+    <div class="card w-100">
+        <div class="card-body">
+            <h5 class="orange_color text-center">Create a Recipe</h5>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.article_number.id_for_label }}">Article Number:</label>
+                    {{ form.article_number }}
+                </div>
+                <button type="submit" class="btn orange_button">Submit</button>
+                <a href="{% url 'ingredient-show-all' %}" class="btn orange_button">Cancel</a>
+            </form>
+
+        </div>
+    </div>
+
+
+{% endblock %}

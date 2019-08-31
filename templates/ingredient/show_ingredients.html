@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %} Recp - Ingredients {% endblock %}
+{% block content %}
+    <div class="w-100">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link text-black-50" href="{% url 'ingredient-add' %}"><i
+                                class="fas fa-utensil-spoon mr-3"></i>Add Ingredient
+                            <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                {% if 'q' in request.GET and request.GET.q != ''%}
+                <a class="mr-2 orange_color" href="{% url 'ingredient-show-all' %}"><i class="fas fa-times"></i></a>
+                {% endif %}
+                <form class="form-inline my-2 my-lg-0" >
+                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ request.GET.q }}">
+                    <button class="btn orange_button my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+        <table class="table">
+            <thead class="thead-brown">
+            <tr>
+                <th class="w-25" scope="col">Article</th>
+                <th class="w-50" scope="col">Name</th>
+                <th class="w-25" scope="col">Cost</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ingredient in ingredients %}
+                <tr>
+                    <th class="w-25" scope="row">
+                        <a class="orange_color" href="{% url 'ingredient-edit' ingredient.id %}"><i
+                                class="far fa-edit mr-3"></i></a>
+                        {{ ingredient.article_number }}
+                    </th>
+                    <td class="w-50">{{ ingredient.name }}</td>
+                    <td class="w-25">{{ ingredient.get_cost }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if not ingredients %}
+            <h3 class="text-center text_h3">Looks like there's nothing here</h3>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %} Recp - Add Ingredient {% endblock %}
+{% block content %}
+    <div class="card w-100">
+        <div class="card-body">
+            <h5 class="orange_color text-center">Ingredient</h5>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.article_number.id_for_label }}">Article Number:</label>
+                    {{ form.article_number }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Name:</label>
+                    {{ form.name }}
+                </div>
+                <label>Cost</label>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="{{ form.value.id_for_label }}">Price:</label>
+                        {{ form.value }}
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="{{ form.amount.id_for_label }}">Amount:</label>
+                        {{ form.amount }}
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="{{ form.unit.id_for_label }}">Unit:</label>
+                        {{ form.unit }}
+                    </div>
+                </div>
+                {% if form.errors or form_cost.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="text-danger"> {{ field.name|capfirst }} : {{ error }} </p>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn orange_button">Submit</button>
+                <a href="{% url 'ingredient-show-all' %}" class="btn orange_button">Cancel</a>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

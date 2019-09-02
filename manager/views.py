@@ -1,8 +1,13 @@
-from django.db.models import Q
+from django.db import transaction
+from django.db.models import Q, Sum
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import CreateView, ListView, UpdateView, View
-from manager.models import Ingredient, Unit, Recipe
-from .forms import IngredientForm
+from django.views.generic import CreateView, ListView, UpdateView, DetailView
+from manager.models import Ingredient, Unit, Recipe, IngredientAmount
+from .forms import IngredientForm, RecipeForm, IngredientAmountForm, RecipeFormSet
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 class IngredientList(ListView):
@@ -11,7 +16,7 @@ class IngredientList(ListView):
     paginate_by = 10
     template_name = 'ingredient/show_ingredients.html'
 
-    def get_context_data(self,  **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.GET.get('q'):
             query = self.request.GET.get('q')
@@ -50,17 +55,75 @@ class RecipeList(ListView):
     queryset = Recipe.objects.all()
     paginate_by = 10
 
-    def get_context_data(self,  **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recipes'] = self.get_queryset()
+        context['recipes'] = self.get_queryset().filter(ingredients__isnull=False).distinct()
         return context
 
 
 class RecipeAdd(CreateView):
-    model = Ingredient
-    template_name = 'ingredient/form_ingredients.html'
-    form_class = IngredientForm
+    model = Recipe
+    template_name = 'recipe/form_recipe.html'
+    form_class = RecipeForm
 
     def get_success_url(self):
-        return reverse('ingredient-show-all')
+        return reverse('recipe-show-all')
 
+    def get_context_data(self, **kwargs):
+        context = super(RecipeAdd, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = RecipeFormSet(self.request.POST)
+        else:
+            context['formset'] = RecipeFormSet()
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        ingredients = context['formset']
+        with transaction.atomic():
+            self.object = form.save()
+            if ingredients.is_valid():
+                ingredients.instance = self.object
+                ingredients.save()
+            else:
+                context['form'] = form
+                context['formset'] = ingredients
+                return render(request=self.request, template_name=self.template_name, context=context)
+        return super(RecipeAdd, self).form_valid(form)
+
+
+class RecipeEdit(RecipeAdd, UpdateView):
+
+    def get_object(self, **kwargs):
+        return Recipe.objects.get(id=self.kwargs.get('id'))
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeEdit, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = RecipeFormSet(self.request.POST, instance=self.object)
+        else:
+            context['formset'] = RecipeFormSet(instance=self.object)
+        return context
+
+
+class RecipeShow(DetailView):
+    model = Recipe
+    template_name = 'recipe/show_recipe.html'
+
+    def get_object(self, **kwargs):
+        return Recipe.objects.get(id=self.kwargs.get('id'))
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeShow, self).get_context_data(**kwargs)
+        context['ingredients'] = IngredientAmount.objects.filter(recipe=self.object)
+        context['total'] = context['ingredients'].aggregate(Sum('total'))['total__sum']
+        return context
+
+
+def get_available_units(request, ingredient):
+    if request.method == "GET" and request.is_ajax():
+        ingredient = Ingredient.objects.get(id=ingredient)
+        available_units = {x.id: x.get_id_display() for x in ingredient.unit.available_units()}
+        return JsonResponse(available_units)
+    else:
+        return HttpResponseBadRequest()

@@ -11,16 +11,22 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link text-black-50" href=""><i
+                        <a class="nav-link text-black-50" href="{% url 'recipe-add' %}"><i
                                 class="fas fa-utensil-spoon mr-3"></i>Add recipe
                             <span class="sr-only">(current)</span></a>
                     </li>
+                    <li class="nav-item active">
+                        <a class="nav-link text-black-50" href=""><i
+                                class="fas fa-list-alt mr-3"></i>My recipes
+                            <span class="sr-only">(current)</span></a>
+                    </li>
                 </ul>
-                {% if 'q' in request.GET and request.GET.q != ''%}
-                <a class="mr-2 orange_color" href="{% url 'recipe-show-all' %}"><i class="fas fa-times"></i></a>
+                {% if 'q' in request.GET and request.GET.q != '' %}
+                    <a class="mr-2 orange_color" href="{% url 'recipe-show-all' %}"><i class="fas fa-times"></i></a>
                 {% endif %}
-                <form class="form-inline my-2 my-lg-0" >
-                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ request.GET.q }}">
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search"
+                           value="{{ request.GET.q }}">
                     <button class="btn orange_button my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
@@ -28,20 +34,14 @@
         <table class="table">
             <thead class="thead-brown">
             <tr>
-                <th class="w-25" scope="col">Article</th>
                 <th class="w-50" scope="col">Name</th>
-                <th class="w-25" scope="col">Cost</th>
+                <th class="w-25" scope="col">Total Cost</th>
             </tr>
             </thead>
             <tbody>
             {% for recipe in recipes %}
                 <tr>
-                    <th class="w-25" scope="row">
-                        <a class="orange_color" href=""><i
-                                class="far fa-edit mr-3"></i></a>
-                        {{ recipe.article_number }}
-                    </th>
-                    <td class="w-50">{{ recipe.name }}</td>
+                    <td class="w-50"><a class="orange_color" href="{% url 'recipe-show' recipe.id %}">{{ recipe.name }}</a></td>
                     <td class="w-25">{{ recipe.get_cost }}</td>
                 </tr>
             {% endfor %}

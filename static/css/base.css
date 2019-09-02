@@ -1,13 +1,17 @@
 body {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: #f3e9db;
 
 }
 
-.container {
-    height: 100%;
+a {
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: none;
 }
 
 .navbar.principal {
@@ -37,7 +41,7 @@ body {
     font-size: xx-large;
 }
 
-.sub_link{
+.sub_link {
     color: #6c757d;
 }
 
@@ -46,28 +50,29 @@ body {
     text-decoration: underline #444a50;
 }
 
-.orange_color{
+
+.orange_color {
     color: #f7882f;
     font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
 }
 
 a.orange_color:hover,
-a.orange_color:focus{
+a.orange_color:focus {
     color: #8b340d;
 }
 
-.orange_button{
+.orange_button {
     color: #F7882f;
     border-color: #F7882f;
 }
 
-.orange_button:hover, .orange_button:focus{
+.orange_button:hover, .orange_button:focus {
     background-color: #f78126;
     border-color: #f78126;
     color: white;
 }
 
-label{
+label {
     color: #5a5653;
 }
 
@@ -87,16 +92,37 @@ label{
 }
 
 a.text-black-50:hover,
-a.text-black-50:focus{
+a.text-black-50:focus {
     color: #f78126 !important;
 }
 
-.breadcrumb-recp{
+.breadcrumb-recp {
     color: white !important;
     font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
     font-size: 2em;
 }
 
-.breadcrumb-recp .breadcrumb-text{
+.breadcrumb-recp .breadcrumb-text {
     /*font-size: 2em;*/
+}
+
+.bar_add {
+    border-radius: 4px;
+    border: 1px solid #ced4db;
+    transition: 0.3s;
+}
+
+.bar_add:hover {
+    background-color: #ced4db;
+    cursor: pointer;
+}
+
+.error-input {
+    border: 1px solid #ff3a44;
+}
+
+.errorlist {
+    padding: 1px;
+    list-style: none;
+    color: #ff3a44;
 }

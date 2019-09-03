@@ -78,6 +78,8 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(Ingredient, through='IngredientAmount')
     created_by = models.ForeignKey(CustomUser, related_name="created_recipes", blank=True, null=True,
                                    on_delete=models.SET_NULL)
+    instructions = models.TextField(max_length=500, null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
 
     class Meta:
         ordering = ('name', )

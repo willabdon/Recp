@@ -5,15 +5,20 @@
     <div class="d-flex flex-row flex-wrap justify-content-start py-3 px-5">
         {% for recipe in recipes %}
             <div class="card mx-2 my-2" style="width: 18rem;">
-                <p class="text-center py-2 card-gray text-white text-uppercase m-0"> {{ recipe.name }} </p>
+                <p class="text-center py-2 card-gray text-white text-uppercase d-flex m-0 justify-content-center">
+                    {% if 'mine' in request.path %}
+                        <a class="absolute-left gray-color" href="{% url 'recipe-edit' recipe.id %}"><i class="far fa-edit"></i></a>
+                    {% else %}
+                        <span class="absolute-right gray-color"><i class="far fa-heart"></i></span>
+                    {% endif %}
+                    <span>{{ recipe.name }}</span>
+                </p>
                 <div class="text-center">
-                    <img class="card-img-top" src="{% static 'images/cardapioicone.png' %}" alt="Card image cap">
+                    <img class="card-img-top" src="{% static 'images/not_found_recipe.jpg' %}" alt="Card image cap">
                 </div>
                 <div class="card-body">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
                     <div class="text-center">
-                        <a href="#" class="w-100 btn btn-info te">See more</a>
+                        <a href="{% url 'recipe-show' recipe.id %}" class="w-100 green-color">See more</a>
                     </div>
                 </div>
             </div>

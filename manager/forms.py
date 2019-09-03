@@ -1,10 +1,13 @@
+from dal import autocomplete
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import widgets, inlineformset_factory
 from manager.models import Ingredient, Unit, Recipe, IngredientAmount
-from django.utils.translation import ugettext_lazy as _
-
 from manager.utils import get_choices
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
+from .layout import *
 
 
 class IngredientForm(forms.ModelForm):
@@ -24,30 +27,40 @@ class IngredientForm(forms.ModelForm):
 
 
 class IngredientAmountForm(forms.ModelForm):
-    attrs = {
-        'class': 'form-control',
-        'required': True
-    }
-
-    error_attrs = {
-        'class': 'form-control error-input',
-        'required': True,
-    }
 
     class Meta:
         model = IngredientAmount
         fields = ('ingredient', 'amount', 'unit',)
+        attrs = {
+            'class': 'form-control',
+            'required': True
+        }
+        widgets = {
+            'ingredient': autocomplete.ModelSelect2(
+                url='ingredient-autocomplete',
+                attrs={
+                    'class': 'form-control ingredient_input',
+                    'required': True
+                }
+            ),
+            'amount': forms.NumberInput(attrs=attrs),
+            'unit': widgets.Select(attrs=attrs, choices=get_choices(Unit.objects.all()))
+        }
 
     def __init__(self, *args, **kwargs):
         super(IngredientAmountForm, self).__init__(*args, **kwargs)
-        ingredient_choices = Ingredient.objects.all()
-
-        self.fields['ingredient'].widget = widgets.Select(attrs={
-            'class': 'form-control ingredient_input',
-            'required': True
-        }, choices=get_choices(ingredient_choices))
-        self.fields['amount'].widget = forms.NumberInput(attrs=self.attrs)
-        self.fields['unit'].widget = widgets.Select(attrs=self.attrs, choices=get_choices(Unit.objects.all()))
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_show_labels = False
+        self.helper.layout = Layout(
+            Div(
+                Div(Field('id')),
+                Div(Field('ingredient'), css_class='form-group col-md-5'),
+                Div(Field('amount'), css_class='form-group col-md-5'),
+                Div(Field('unit'), css_class='form-group col-md-2'),
+                css_class='form-row'
+            ),
+        )
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -66,7 +79,7 @@ class IngredientAmountForm(forms.ModelForm):
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('name',)
+        fields = ('id', 'name',)
         attrs = {
             'class': 'form-control'
         }
@@ -74,6 +87,24 @@ class RecipeForm(forms.ModelForm):
             'name': forms.TextInput(attrs=attrs),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(RecipeForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = True
+        self.helper.form_show_labels = False
+        self.helper.label_class = 'd-block text-center'
+        # self.helper.field_class = 'form-group'
+        self.helper.layout = Layout(
+            Div(
+                HTML('<label class="d-block text-center" for="id_name">Tell us your recipe name:</label>'),
+                Field('name', ), css_class='form-group'
+            ),
+            HTML('<h4 class="gray-color">Ingredients</h4><hr>'),
+            Fieldset('', Formset('formset')),
+            HTML('<button type="submit" class="btn btn-green mr-2">Submit</button>'),
+            HTML('<a href="{% url "recipe-show-mine" %}" class="btn btn-green">Cancel</a>')
+        )
 
-RecipeFormSet = inlineformset_factory(Recipe, IngredientAmount, extra=0, can_delete=True, min_num=1,
+
+RecipeFormSet = inlineformset_factory(Recipe, IngredientAmount, extra=0, can_delete=False, min_num=1,
                                       fields=('ingredient', 'amount', 'unit',), form=IngredientAmountForm)

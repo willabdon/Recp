@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from manager.models import Ingredient, Recipe, IngredientAmount
 from .forms import IngredientForm, RecipeForm, RecipeFormSet
+from dal import autocomplete
 
 
 class IngredientList(ListView):
@@ -70,6 +71,11 @@ class RecipeList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        if 'mine' in self.request.path:
+            self.queryset = self.get_queryset().filter(created_by=self.request.user)
+            # self.template_name = 'ingredient/show_my_ingredients.html'
+
         if self.request.GET.get('q'):
             query = self.request.GET.get('q')
             context['recipes'] = self.get_queryset().filter(name__icontains=query)
@@ -84,7 +90,7 @@ class RecipeAdd(CreateView):
     form_class = RecipeForm
 
     def get_success_url(self):
-        return reverse('recipe-show-all')
+        return reverse('recipe-show-mine')
 
     def get_context_data(self, **kwargs):
         context = super(RecipeAdd, self).get_context_data(**kwargs)
@@ -96,13 +102,16 @@ class RecipeAdd(CreateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
+        print("ok")
         ingredients = context['formset']
         with transaction.atomic():
             self.object = form.save()
             if ingredients.is_valid():
                 ingredients.instance = self.object
                 ingredients.save()
+
             else:
+                print(ingredients.errors)
                 context['form'] = form
                 context['formset'] = ingredients
                 return render(request=self.request, template_name=self.template_name, context=context)
@@ -138,6 +147,17 @@ class RecipeShow(DetailView):
         context['ingredients'] = IngredientAmount.objects.filter(recipe=self.object)
         context['total'] = context['ingredients'].aggregate(Sum('total'))['total__sum']
         return context
+
+
+class IngredientAutoComplete(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self):
+        qs = Ingredient.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
 
 
 def get_available_units(request, ingredient):

@@ -346,3 +346,42 @@ a.text-black-50:focus {
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
+
+.select2-container {
+    width: 100% !important;
+    min-width: unset !important;
+}
+
+.select2-selection {
+    height: calc(1.5em + 0.75rem + 2px) !important;
+}
+
+.select2-container--default .select2-selection--single {
+    border: 1px solid #ced4da !important;
+    border-radius: 4px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 5px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #494f57 transparent transparent transparent !important;
+}
+
+.absolute-left {
+    position: absolute;
+    left: 10px;
+}
+
+.absolute-right {
+    position: absolute;
+    right: 10px;
+}
+
+
+@media (max-width: 990px)  {
+    .right-panel .flex-row {
+        justify-content: center !important;
+    }
+}

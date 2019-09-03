@@ -1,54 +1,27 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %} Recp - recipes {% endblock %}
 {% block content %}
-    <div class="w-100">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
-            <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link text-black-50" href="{% url 'recipe-add' %}"><i
-                                class="fas fa-utensil-spoon mr-3"></i>Add recipe
-                            <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link text-black-50" href=""><i
-                                class="fas fa-list-alt mr-3"></i>My recipes
-                            <span class="sr-only">(current)</span></a>
-                    </li>
-                </ul>
-                {% if 'q' in request.GET and request.GET.q != '' %}
-                    <a class="mr-2 orange_color" href="{% url 'recipe-show-all' %}"><i class="fas fa-times"></i></a>
-                {% endif %}
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search"
-                           value="{{ request.GET.q }}">
-                    <button class="btn orange_button my-2 my-sm-0" type="submit">Search</button>
-                </form>
+    <div class="d-flex flex-row flex-wrap justify-content-start py-3 px-5">
+        {% for recipe in recipes %}
+            <div class="card mx-2 my-2" style="width: 18rem;">
+                <p class="text-center py-2 card-gray text-white text-uppercase m-0"> {{ recipe.name }} </p>
+                <div class="text-center">
+                    <img class="card-img-top" src="{% static 'images/cardapioicone.png' %}" alt="Card image cap">
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                    <div class="text-center">
+                        <a href="#" class="w-100 btn btn-info te">See more</a>
+                    </div>
+                </div>
             </div>
-        </nav>
-        <table class="table">
-            <thead class="thead-brown">
-            <tr>
-                <th class="w-50" scope="col">Name</th>
-                <th class="w-25" scope="col">Total Cost</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for recipe in recipes %}
-                <tr>
-                    <td class="w-50"><a class="orange_color" href="{% url 'recipe-show' recipe.id %}">{{ recipe.name }}</a></td>
-                    <td class="w-25">{{ recipe.get_cost }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% endfor %}
         {% if not recipes %}
-            <h3 class="text-center text_h3">Looks like there's nothing here</h3>
+            <div class="d-flex w-100 justify-content-center">
+                <p class="text-center gray-color">No Recipes Found.</p>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

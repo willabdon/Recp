@@ -1,0 +1,145 @@
+:root {
+    --gray-color: #464f5f;
+    --light-gray-color: #8ad0e8;
+    --badgre-gray: #d3d5de;
+    --blue-color: #78a6a2;
+    --blue-color-hover: #4aa3bf;
+    --green-color: #7ed7bb;
+    --text-green: #78a6a3;
+    --text-blue: #c8e9f0;
+    --text-blue-hover: #8ad0e8;
+    --text-gray: #67696c;
+    --text-light-gray: #9ca4ad;
+    --search-bar-gray: #585e6e;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f3e9db;
+
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.navbar.principal {
+    height: 4.5em;
+    background: #f7c331;
+    border-bottom: 2px solid #f7882f;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #ffffff;
+    font-size: medium;
+    font-weight: 700;
+}
+
+.navbar-light .navbar-nav .nav-link:focus,
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #f7882f;
+}
+
+.content_text {
+    margin-top: 20%;
+}
+
+.text_h3 {
+    color: #f7882f;
+    font-family: monospace;
+    font-size: xx-large;
+}
+
+.sub_link {
+    color: #6c757d;
+}
+
+.sub_link:hover, .sub_link:focus {
+    color: #444a50;
+    text-decoration: underline #444a50;
+}
+
+
+.orange_color {
+    color: #f7882f;
+    font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+}
+
+a.orange_color:hover,
+a.orange_color:focus {
+    color: #8b340d;
+}
+
+.orange_button {
+    color: #F7882f;
+    border-color: #F7882f;
+}
+
+.orange_button:hover, .orange_button:focus {
+    background-color: #f78126;
+    border-color: #f78126;
+    color: white;
+}
+
+label {
+    color: #5a5653;
+}
+
+.collapsed_tr:hover {
+    cursor: pointer;
+    background: #ffdfbc;
+}
+
+.thead-brown th {
+    color: #f78126;
+    background-color: #dcc7aa;
+    border-color: #dcc7aa;
+}
+
+.table th {
+    color: #615d55;
+}
+
+a.text-black-50:hover,
+a.text-black-50:focus {
+    color: #f78126 !important;
+}
+
+.breadcrumb-recp {
+    color: white !important;
+    font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+    font-size: 2em;
+    position: absolute;
+    left: 20px;
+}
+
+.breadcrumb-recp .breadcrumb-text {
+    /*font-size: 2em;*/
+}
+
+.bar_add {
+    border-radius: 4px;
+    border: 1px solid #ced4db;
+    transition: 0.3s;
+}
+
+.bar_add:hover {
+    background-color: #ced4db;
+    cursor: pointer;
+}
+
+.error-input {
+    border: 1px solid #ff3a44;
+}
+
+.errorlist {
+    padding: 1px;
+    list-style: none;
+    color: #ff3a44;
+}

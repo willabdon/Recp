@@ -4,10 +4,8 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
-from manager.models import Ingredient, Unit, Recipe, IngredientAmount
-from .forms import IngredientForm, RecipeForm, IngredientAmountForm, RecipeFormSet
-import json
-from django.core.serializers.json import DjangoJSONEncoder
+from manager.models import Ingredient, Recipe, IngredientAmount
+from .forms import IngredientForm, RecipeForm, RecipeFormSet
 
 
 class IngredientList(ListView):
@@ -18,6 +16,9 @@ class IngredientList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if 'mine' in self.request.path:
+            self.queryset = self.get_queryset().filter(created_by=self.request.user)
+            self.template_name = 'ingredient/show_my_ingredients.html'
         if self.request.GET.get('q'):
             query = self.request.GET.get('q')
             context['ingredients'] = self.get_queryset().filter(
@@ -34,7 +35,16 @@ class IngredientAdd(CreateView):
     form_class = IngredientForm
 
     def get_success_url(self):
-        return reverse('ingredient-show-all')
+        if self.request.POST.get('_save'):
+            return reverse('ingredient-show-mine')
+        if self.request.POST.get('_another'):
+            return reverse('ingredient-add')
+
+    def form_valid(self, form):
+        response = super(IngredientAdd, self).form_valid(form)
+        self.object.created_by = self.request.user
+        self.object.save()
+        return response
 
 
 class IngredientEdit(UpdateView):
@@ -46,18 +56,25 @@ class IngredientEdit(UpdateView):
         return Ingredient.objects.get(id=self.kwargs.get('id'))
 
     def get_success_url(self):
-        return reverse('ingredient-show-all')
+        if self.request.POST.get('_save'):
+            return reverse('ingredient-show-mine')
+        if self.request.POST.get('_another'):
+            return reverse('ingredient-add')
 
 
 class RecipeList(ListView):
     model = Recipe
     template_name = 'recipe/show_recipes.html'
     queryset = Recipe.objects.all()
-    paginate_by = 10
+    paginate_by = 8
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recipes'] = self.get_queryset().filter(ingredients__isnull=False).distinct()
+        if self.request.GET.get('q'):
+            query = self.request.GET.get('q')
+            context['recipes'] = self.get_queryset().filter(name__icontains=query)
+        else:
+            context['recipes'] = self.get_queryset().filter(ingredients__isnull=False).distinct()
         return context
 
 
@@ -89,7 +106,10 @@ class RecipeAdd(CreateView):
                 context['form'] = form
                 context['formset'] = ingredients
                 return render(request=self.request, template_name=self.template_name, context=context)
-        return super(RecipeAdd, self).form_valid(form)
+        response = super(RecipeAdd, self).form_valid(form)
+        self.object.created_by = self.request.user
+        self.object.save()
+        return response
 
 
 class RecipeEdit(RecipeAdd, UpdateView):

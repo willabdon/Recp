@@ -1,10 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from apicbase.models import CustomUser
 from manager.utils import calc_total_ingredient
 
 
 class Unit(models.Model):
+
     KILOGRAM = 1
     GRAM = 2
     LITER = 3
@@ -52,14 +54,17 @@ class Unit(models.Model):
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=300)
-    article_number = models.CharField(max_length=200, unique=True)
+    article_number = models.IntegerField(unique=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, related_name="created_ingredients", blank=True, null=True,
+    created_by = models.ForeignKey(CustomUser, related_name="created_ingredients", blank=True, null=True,
                                    on_delete=models.SET_NULL)
     created = models.DateTimeField(auto_now_add=True, blank=True)
     modified = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ('article_number', )
 
     def __str__(self):
         return self.name
@@ -71,6 +76,11 @@ class Ingredient(models.Model):
 class Recipe(models.Model):
     name = models.CharField(max_length=300)
     ingredients = models.ManyToManyField(Ingredient, through='IngredientAmount')
+    created_by = models.ForeignKey(CustomUser, related_name="created_recipes", blank=True, null=True,
+                                   on_delete=models.SET_NULL)
+
+    class Meta:
+        ordering = ('name', )
 
 
 class IngredientAmount(models.Model):

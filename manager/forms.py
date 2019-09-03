@@ -16,7 +16,7 @@ class IngredientForm(forms.ModelForm):
         }
         widgets = {
             'name': forms.TextInput(attrs=attrs),
-            'article_number': forms.TextInput(attrs=attrs),
+            'article_number': forms.NumberInput(attrs=attrs),
             'value': forms.NumberInput(attrs=attrs),
             'amount': forms.NumberInput(attrs=attrs),
             'unit': widgets.Select(attrs=attrs, choices=Unit.objects.all())

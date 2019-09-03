@@ -8,11 +8,92 @@
     {% block styles %} {% endblock %}
 </head>
 <body>
-{% include 'navbar.html' %}
-<div class="container d-flex justify-content-center">
-{% block content %}
 
-{% endblock %}
+<nav class="navbar navbar-expand-lg principal justify-content-center">
+    <a class="navbar-brand breadcrumb-recp" href="/">
+        <i class="fas fa-utensils mr-2"></i> <span class="breadcrumb-text">RECP</span>
+    </a>
+    <form class="form-row col-sm-7 col-lg-5" action="{% url 'recipe-show-all' %}">
+        <input class="form-control col-12 search-bar" type="search" name="q" aria-label="Search">
+        <span class="input-search light-gray-color-text">Search for a <span class="green-color">recipe</span>.</span>
+    </form>
+</nav>
+<nav class="navbar navbar-expand-md down-bar">
+    <div class="col-lg-3 col-md-4 col-xl-2 side-menu h-100 d-flex justify-content-center align-items-center blue-color-text font-weight-bold">
+        {{ request.user.first_name }} {{ request.user.last_name }}
+    </div>
+    <div class="collapse navbar-collapse h-100 bar-menu">
+        <ul class="nav navbar-nav">
+            <li><a href="{% url 'recipe-show-all' %}">Recipes</a>
+            </li>
+            <li><a href="{% url 'ingredient-show-all' %}">Ingredients</a>
+            </li>
+        </ul>
+    </div>
+
+</nav>
+
+<div class="content-body d-flex flex-row" id="content-body">
+    <div class="h-100 side-menu-bar col-md-4 col-lg-3 col-xl-2 d-flex flex-column">
+        <div class="text-center">
+            <img src="{% static 'images/cardapioicone.png' %}" alt="..." class="rounded-circle img-logo img-thumbnail">
+        </div>
+        <form action="{% url 'recipe-add' %}">
+            <button type="submit" class="w-100 h3-em btn btn-green">Post a Recipe</button>
+        </form>
+        <ul class="nav flex-column mt-4">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-inbox mr-1"></i>
+                    <span>My Recipes</span>
+                    <span class="badge  float-right">{{ request.user.my_recipes_quantity }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'ingredient-show-mine' %}">
+                    <i class="fas fa-hamburger mr-1"></i>
+                    <span>My ingredients</span>
+                    <span class="badge float-right">{{ request.user.my_ingredients_quantity }}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-heart mr-1"></i>
+                    <span>Favorites</span>
+                    <span class="badge float-right">{{ request.user.my_favorites_quantity }}</span>
+                </a>
+            </li>
+        </ul>
+        <a class="text-center py-3 gray-color" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    <div class="col-xl-10 col-lg-9 col-md-8 right-panel">
+        {% block content %}
+
+        {% endblock %}
+    </div>
 </div>
+<script>
+    $('.search-bar')
+        .on('focus', function () {
+            $(this).siblings('.input-search').hide();
+        })
+        .on('blur', function () {
+            if (!$(this).val())
+                $(this).siblings('.input-search').show();
+        });
+
+    function resize_panel() {
+        let width = $('.side-menu-bar').width() + 30;
+        $('.right-panel').css('margin-left', `${width}px`);
+    }
+
+    $(document).ready(function () {
+        resize_panel();
+    });
+
+    $(window).resize(function () {
+        resize_panel();
+    });
+</script>
 </body>
 </html>

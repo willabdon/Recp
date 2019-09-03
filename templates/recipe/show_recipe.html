@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Recp - Recipe {% endblock %}
+{% block content %}
+    <div class="card w-100">
+        <div class="card-body">
+            <h3 class="orange_color text-center"><a href="{% url 'recipe-show-all' %}"><i
+                    class="fas fa-arrow-left float-left nav-link text-black-50"></i></a>{{ recipe.name }} </h3>
+            <hr>
+            <legend class="text-black-50 text-center">Ingredients</legend>
+            <table class="table">
+                <thead class="thead-brown">
+                <tr>
+                    <th class="w-25">Name</th>
+                    <th class="w-25">Amount</th>
+                    <th class="w-25">Price</th>
+                    <th class="w-25">Total Cost</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ingredient in ingredients %}
+                    <tr>
+                        <td class="w-25">{{ ingredient.ingredient.name }}</td>
+                        <td class="w-25">{{ ingredient.get_formated_amount }}</td>
+                        <td class="w-25">{{ ingredient.ingredient.get_cost }}</td>
+                        <td class="w-25">{{ ingredient.total }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <th colspan="3" class="w-25 text-right justify-content-end">Total: {{ ingredient.name }}</th>
+                    <td class="w-25"> {{ total }} €</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+

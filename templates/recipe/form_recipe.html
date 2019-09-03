@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Recp - Recipe {% endblock %}
+{% block content %}
+    <div class="card w-100">
+        <div class="card-body">
+            {% if 'add' in request.path %}
+                <h4 class="gray-color text-center">Create a Recipe</h4>
+            {% else %}
+                <h4 class="gray-color text-center">Edit a Recipe</h4>
+            {% endif %}
+
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="d-block text-center"
+                           for="{{ form.name.id_for_label }}">Tell us
+                        your recipe
+                        name:</label>
+                    {{ form.name }}
+                </div>
+                {{ formset.management_form }}
+                <h4 class="gray-color">Ingredients</h4>
+                <hr>
+                <div class="row">
+                    <label class="col-md-5 ">Ingredient:</label>
+                    <label class="col-md-5 ">Amount:</label>
+                    <label class="col-md-2 ">Unit:</label>
+                </div>
+                <div id="ingredients_formset">
+                    {% for form in formset %}
+                        <div class="form-row">
+                            {{ form.id }}
+                            <div class="form-group col-md-5">
+                                {{ form.ingredient }}
+                            </div>
+                            <div class="form-group col-md-5">
+                                {{ form.amount }}
+                                {{ form.amount.errors }}
+                            </div>
+                            <div class="form-group col-md-2">
+                                {{ form.unit }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="bars-management">
+                    <div id="bar_add" class="bar_add d-flex justify-content-center mb-2"><i class="fas fa-plus py-2 text-black-50"></i></div>
+                </div>
+                <button type="submit" class="btn btn-green">Submit</button>
+                <a href="{% url 'recipe-show-all' %}" class="btn btn-green">Cancel</a>
+            </form>
+        </div>
+    </div>
+    <script src="{% static 'js/add_ingredient_inputs.js' %}"></script>
+{% endblock %}
+
+

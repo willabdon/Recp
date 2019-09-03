@@ -3,7 +3,11 @@
 {% block content %}
     <div class="card w-100">
         <div class="card-body">
-            <h5 class="orange_color text-center">Ingredient</h5>
+            {% if 'add' in request.path %}
+                <h5 class="gray-color text-center">Add Ingredient</h5>
+            {% else %}
+                <h5 class="gray-color text-center">Edit Ingredient</h5>
+            {% endif %}
             <form method="post" action="">
                 {% csrf_token %}
                 <div class="form-group">
@@ -36,8 +40,9 @@
                         {% endfor %}
                     {% endfor %}
                 {% endif %}
-                <button type="submit" class="btn orange_button">Submit</button>
-                <a href="{% url 'ingredient-show-all' %}" class="btn orange_button">Cancel</a>
+                <input type="submit" name="_save" class="btn btn-green" value="Save"/>
+                <input type="submit" name="_another" class="btn btn-green" value="Save and add Another" />
+                <a href="{% url 'ingredient-show-all' %}" class="btn btn-green">Cancel</a>
             </form>
         </div>
     </div>

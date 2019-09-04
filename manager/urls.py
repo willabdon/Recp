@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from .views import IngredientList, IngredientAdd, IngredientEdit, RecipeList, RecipeAdd, RecipeEdit, RecipeShow, \
     IngredientAutoComplete
-from .views import get_available_units
+from .views import get_available_units, like_recipe, dislike_recipe
 
 urlpatterns = [
     path('ingredient/all', IngredientList.as_view(), name='ingredient-show-all'),
@@ -16,4 +16,6 @@ urlpatterns = [
     path('recipe/add', RecipeAdd.as_view(), name='recipe-add'),
     path('recipe/edit/<int:id>/', RecipeEdit.as_view(), name='recipe-edit'),
     path('recipe/show/<int:id>/', RecipeShow.as_view(), name='recipe-show'),
+    path('recipe/<int:recipe>/like', like_recipe, name='like-recipe'),
+    path('recipe/<int:recipe>/dislike', dislike_recipe, name='dislike-recipe'),
 ]

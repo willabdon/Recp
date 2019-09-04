@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.http import JsonResponse, HttpResponseBadRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from manager.models import Ingredient, Recipe, IngredientAmount
@@ -102,7 +102,6 @@ class RecipeAdd(CreateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        print("ok")
         ingredients = context['formset']
         with transaction.atomic():
             self.object = form.save()
@@ -111,7 +110,6 @@ class RecipeAdd(CreateView):
                 ingredients.save()
 
             else:
-                print(ingredients.errors)
                 context['form'] = form
                 context['formset'] = ingredients
                 return render(request=self.request, template_name=self.template_name, context=context)
@@ -167,3 +165,21 @@ def get_available_units(request, ingredient):
         return JsonResponse(available_units)
     else:
         return HttpResponseBadRequest()
+
+
+def like_recipe(request, recipe):
+    if request.method == "GET":
+        recipe = Recipe.objects.get(id=recipe)
+        request.user.recipe_favorited.add(recipe)
+        request.user.save()
+    return redirect('recipe-show-all')
+
+
+def dislike_recipe(request, recipe):
+    if request.method == "GET":
+        recipe = Recipe.objects.get(id=recipe)
+        request.user.recipe_favorited.remove(recipe)
+        request.user.save()
+    return redirect('recipe-show-all')
+
+

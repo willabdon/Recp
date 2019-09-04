@@ -379,6 +379,18 @@ a.text-black-50:focus {
     right: 10px;
 }
 
+.cover-recipe {
+    max-width: 300px !important;
+}
+
+.table thead th{
+    border: none !important;
+}
+
+.right-panel .card {
+    border: none !important;
+}
+
 
 @media (max-width: 990px)  {
     .right-panel .flex-row {

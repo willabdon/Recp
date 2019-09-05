@@ -108,7 +108,6 @@ DATABASES = {
 }
 
 # DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
-# django_heroku.settings(locals())
 # del DATABASES['default']['OPTIONS']['sslmode']
 
 # Password validation
@@ -160,3 +159,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+django_heroku.settings(locals())

@@ -93,6 +93,7 @@ LOGIN_URL = '/login/'
 PUBLIC_PATHS = [
     r'^/login/',
     r'^/signup/',
+    r'^/admin/*',
 ]
 
 # Database

@@ -12,6 +12,8 @@ django-crispy-forms = "*"
 django-dynamic-formsets = "*"
 pillow = "*"
 whitenoise = "*"
+django-heroku = "*"
+gunicorn = "*"
 
 [dev-packages]
 

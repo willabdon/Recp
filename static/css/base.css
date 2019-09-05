@@ -93,24 +93,6 @@ a:hover {
     padding-left: 0;
 }
 
-/*@media (min-width: 768px) {*/
-/*    .righ-panel {*/
-/*        margin-left: 21em;*/
-/*    }*/
-/*}*/
-
-/*@media (min-width: 1024px) {*/
-/*    .righ-panel {*/
-/*        margin-left: 16em;*/
-/*    }*/
-/*}*/
-
-/*@media (min-width: 1200px) {*/
-/*    .righ-panel {*/
-/*        margin-left: 27em;*/
-/*    }*/
-/*}*/
-
 .side-menu-bar {
     background-color: var(--light-gray-color);
     position: fixed;
@@ -186,6 +168,10 @@ a:hover {
 
 .blue-color-text {
     color: var(--text-blue);
+}
+
+.blue-color {
+    color: var(--blue-color) !important;
 }
 
 .navbar.principal {
@@ -377,6 +363,11 @@ a.text-black-50:focus {
 .absolute-right {
     position: absolute;
     right: 10px;
+}
+
+.absolute-bottom {
+    position: absolute;
+    bottom: 10px;
 }
 
 .cover-recipe {

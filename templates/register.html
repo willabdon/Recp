@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recp - Signup</title>
+    {% include 'head.html' %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+<div class="container d-flex h-100">
+    <div class="row justify-content-center align-self-center  mx-auto">
+        <div class="w-100">
+            <div class="d-flex justify-content-center logo">
+                <div class="d-flex justify-content-center align-items-center">
+                    <i class="fas fa-utensils mr-2 "></i> <span class="breadcrumb-text ">RECP</span>
+                </div>
+            </div>
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Sign up</h5>
+                    <form class="form-signin" method="post">
+                        {% csrf_token %}
+                        <div class="form-row justify-content-center">
+                            <div class="form-label-group mr-2">
+                                {{ form.first_name }}
+                                <label for="id_first_name">First Name</label>
+                            </div>
+                            <div class="form-label-group">
+                                {{ form.last_name }}
+                                <label for="id_last_name">Last Name</label>
+                            </div>
+                        </div>
+                        <div class="form-label-group">
+                            {{ form.email }}
+                            {% for error in form.email.errors %}
+                                <p class="text-danger pl-3 pt-2">{{ error }}</p>
+                            {% endfor %}
+                            <label for="id_email">Email</label>
+                        </div>
+                        <div class="form-label-group">
+                            {{ form.password }}
+                            <label for="id_password">Password</label>
+                        </div>
+                        <div class="form-label-group">
+                            {{ form.password_confirm }}
+                            <label for="id_password2">Password Confirm</label>
+                            {% for error in form.password.errors %}
+                                <p class="text-danger pl-3 pt-2">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        <button class="btn btn-lg btn-blue btn-block text-uppercase" type="submit">Sign up</button>
+                        <div class="d-flex justify-content-center mt-3 flex-column align-items-center">
+                            <span>already have an account yet?</span>
+                            <a href="{% url 'login' %}" class="green-color"> login here</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,12 +1,15 @@
-from django.shortcuts import redirect
-from django.utils.http import is_safe_url
+from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
+from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import FormView, RedirectView
+from django.views.generic import FormView, RedirectView, CreateView
+
+from apicbase.forms import UserForm
+from apicbase.models import CustomUser
 
 
 class LoginView(FormView):
@@ -51,6 +54,25 @@ class LogoutView(RedirectView):
     def get(self, request, *args, **kwargs):
         auth_logout(request)
         return super(LogoutView, self).get(request, *args, **kwargs)
+
+
+class SignupView(CreateView):
+    """
+    Provides users the ability to signup
+    """
+    model = CustomUser
+    template_name = 'register.html'
+    form_class = UserForm
+    success_url = '/'
+
+    def form_valid(self, form):
+        response = super(SignupView, self).form_valid(form)
+        # auth_user = authenticate(
+        #     username=self.object.username,
+        #     password=self.object.password
+        # )
+        login(self.request, self.object)
+        return response
 
 
 def redirect_view(request):

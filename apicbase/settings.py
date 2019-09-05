@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'dal',
     'dal_select2',
     'django.contrib.admin',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -80,12 +82,21 @@ AUTH_USER_MODEL = 'apicbase.CustomUser'
 LOGIN_URL = '/login/'
 PUBLIC_PATHS = [
     r'^/login/',
+    r'^/signup/',
 ]
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'recp',
+        'USER': 'postgres',
+        'PASSWORD': '1385126',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'recp',
@@ -119,7 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 LANGUAGES = [
-  ('en', _('English')),
+    ('en', _('English')),
 ]
 
 TIME_ZONE = 'UTC'
@@ -139,7 +150,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-STATIC_ROOT = 'staticfiles/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

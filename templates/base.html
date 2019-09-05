@@ -57,7 +57,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% url 'recipe-show-favorites' %}">
                     <i class="fas fa-heart mr-1"></i>
                     <span>Favorites</span>
                     <span class="badge float-right">{{ request.user.my_favorites_quantity }}</span>

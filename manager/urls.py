@@ -13,6 +13,7 @@ urlpatterns = [
     path('ingredient/autocomplete/', IngredientAutoComplete.as_view(), name='ingredient-autocomplete'),
     path('recipe/all', RecipeList.as_view(), name='recipe-show-all'),
     path('recipe/mine', RecipeList.as_view(), name='recipe-show-mine'),
+    path('recipe/favorites', RecipeList.as_view(), name='recipe-show-favorites'),
     path('recipe/add', RecipeAdd.as_view(), name='recipe-add'),
     path('recipe/edit/<int:id>/', RecipeEdit.as_view(), name='recipe-edit'),
     path('recipe/show/<int:id>/', RecipeShow.as_view(), name='recipe-show'),

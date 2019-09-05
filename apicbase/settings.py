@@ -25,7 +25,7 @@ SECRET_KEY = '8le6s@tm56cp89@^jpty204&xx^7kay1&7z@m!meuju8!c5h&h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['recp-django.herokuapp.com']
 
 # Application definition
 
@@ -97,14 +97,6 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     },
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'recp',
-        'USER': 'postgres',
-        'PASSWORD': '1385126',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
 }
 
 # Password validation

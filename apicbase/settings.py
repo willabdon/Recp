@@ -12,9 +12,16 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from django.utils.translation import gettext_lazy as _
+import dj_database_url
+import dotenv
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -25,7 +32,7 @@ SECRET_KEY = '8le6s@tm56cp89@^jpty204&xx^7kay1&7z@m!meuju8!c5h&h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['recp-django.herokuapp.com']
+ALLOWED_HOSTS = ['recp-django.herokuapp.com', 'localhost']
 
 # Application definition
 
@@ -42,6 +49,7 @@ INSTALLED_APPS = [
     'apicbase',
     'manager',
     'crispy_forms',
+    'django_heroku',
 
 ]
 
@@ -98,6 +106,10 @@ DATABASES = {
         'PORT': '5432',
     },
 }
+
+# DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
+# django_heroku.settings(locals())
+# del DATABASES['default']['OPTIONS']['sslmode']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

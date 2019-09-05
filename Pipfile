@@ -15,6 +15,7 @@ whitenoise = "*"
 django-heroku = "*"
 gunicorn = "*"
 python-dotenv = "*"
+django-jet = "*"
 
 [dev-packages]
 

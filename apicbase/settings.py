@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'dal',
     'dal_select2',
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

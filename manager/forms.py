@@ -22,12 +22,15 @@ class IngredientForm(forms.ModelForm):
             'article_number': forms.NumberInput(attrs=attrs),
             'value': forms.NumberInput(attrs=attrs),
             'amount': forms.NumberInput(attrs=attrs),
-            'unit': widgets.Select(attrs=attrs, choices=Unit.objects.all())
         }
+
+    def __init__(self, *args, **kwargs):
+        super(IngredientForm, self).__init__(*args, **kwargs)
+        self.fields['unit'].widget = widgets.Select(attrs={'class': 'form-control'},
+                                                    choices=get_choices(Unit.objects.all()))
 
 
 class IngredientAmountForm(forms.ModelForm):
-
     class Meta:
         model = IngredientAmount
         fields = ('ingredient', 'amount', 'unit',)
@@ -44,11 +47,12 @@ class IngredientAmountForm(forms.ModelForm):
                 }
             ),
             'amount': forms.NumberInput(attrs=attrs),
-            'unit': widgets.Select(attrs=attrs, choices=get_choices(Unit.objects.all()))
         }
 
     def __init__(self, *args, **kwargs):
         super(IngredientAmountForm, self).__init__(*args, **kwargs)
+        self.fields['unit'].widget = widgets.Select(attrs={'class': 'form-control'},
+                                                    choices=get_choices(Unit.objects.all()))
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.form_show_labels = False

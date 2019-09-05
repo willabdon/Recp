@@ -17,5 +17,5 @@ class CustomUser(AbstractUser):
     def my_favorites_quantity(self):
         return self.recipe_favorited.count()
 
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
     USERNAME_FIELD = 'email'

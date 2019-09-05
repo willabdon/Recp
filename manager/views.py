@@ -1,10 +1,11 @@
 from django.db import transaction
 from django.db.models import Q, Sum
 from django.http import JsonResponse, HttpResponseBadRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from manager.models import Ingredient, Recipe, IngredientAmount
+from manager.utils import calc_total_ingredient
 from .forms import IngredientForm, RecipeForm, RecipeFormSet
 from dal import autocomplete
 
@@ -66,22 +67,24 @@ class IngredientEdit(UpdateView):
 class RecipeList(ListView):
     model = Recipe
     template_name = 'recipe/show_recipes.html'
-    queryset = Recipe.objects.all()
+    context_object_name = "recipes"
     paginate_by = 8
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_queryset(self):
+        queryset = Recipe.objects.filter(ingredients__isnull=False).distinct()
 
         if 'mine' in self.request.path:
-            self.queryset = self.get_queryset().filter(created_by=self.request.user)
+            queryset = queryset.filter(created_by=self.request.user)
             # self.template_name = 'ingredient/show_my_ingredients.html'
 
         if self.request.GET.get('q'):
             query = self.request.GET.get('q')
-            context['recipes'] = self.get_queryset().filter(name__icontains=query)
-        else:
-            context['recipes'] = self.get_queryset().filter(ingredients__isnull=False).distinct()
-        return context
+            queryset = queryset.filter(name__icontains=query)
+
+        if 'favorites' in self.request.path:
+            queryset = self.request.user.recipe_favorited.all()
+
+        return queryset
 
 
 class RecipeAdd(CreateView):
@@ -102,7 +105,6 @@ class RecipeAdd(CreateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        print("ok")
         ingredients = context['formset']
         with transaction.atomic():
             self.object = form.save()
@@ -111,7 +113,6 @@ class RecipeAdd(CreateView):
                 ingredients.save()
 
             else:
-                print(ingredients.errors)
                 context['form'] = form
                 context['formset'] = ingredients
                 return render(request=self.request, template_name=self.template_name, context=context)
@@ -145,7 +146,11 @@ class RecipeShow(DetailView):
     def get_context_data(self, **kwargs):
         context = super(RecipeShow, self).get_context_data(**kwargs)
         context['ingredients'] = IngredientAmount.objects.filter(recipe=self.object)
-        context['total'] = context['ingredients'].aggregate(Sum('total'))['total__sum']
+        total = 0
+        for ingredient in context['ingredients']:
+            total += calc_total_ingredient(ingredient)
+        context['total'] = total
+        # context['total'] = context['ingredients'].aggregate(Sum('total'))['total__sum']
         return context
 
 
@@ -167,3 +172,24 @@ def get_available_units(request, ingredient):
         return JsonResponse(available_units)
     else:
         return HttpResponseBadRequest()
+
+
+def like_recipe(request, recipe):
+    if request.method == "GET":
+        recipe = Recipe.objects.get(id=recipe)
+        request.user.recipe_favorited.add(recipe)
+        request.user.save()
+
+    return redirect('recipe-show-all')
+
+
+def dislike_recipe(request, recipe):
+    if request.method == "GET":
+        recipe = Recipe.objects.get(id=recipe)
+        request.user.recipe_favorited.remove(recipe)
+        request.user.save()
+        if 'favorites' in request.META.get('HTTP_REFERER', ''):
+            return redirect('recipe-show-favorites')
+    return redirect('recipe-show-all')
+
+

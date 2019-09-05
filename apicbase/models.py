@@ -4,6 +4,8 @@ from django.db import models
 
 class CustomUser(AbstractUser):
 
+    username = models.CharField(max_length=128, blank=True, null=True)
+    email = models.EmailField(blank=True, unique=True)
     recipe_favorited = models.ManyToManyField('manager.Recipe')
 
     def my_recipes_quantity(self):
@@ -14,3 +16,6 @@ class CustomUser(AbstractUser):
 
     def my_favorites_quantity(self):
         return self.recipe_favorited.count()
+
+    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'email'

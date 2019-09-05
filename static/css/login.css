@@ -114,6 +114,13 @@ body {
     color: #777;
 }
 
+.logo {
+    color: #56adc9 !important;
+    /*background-color: #6ac5a9;*/
+    /*padding: 20px;*/
+    font-size: 4em;
+}
+
 
 /* Fallback for Edge
 -------------------------------------------------- */

@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-
 from apicbase.models import CustomUser
-from manager.utils import calc_total_ingredient
 
 
 class Unit(models.Model):
@@ -88,13 +86,8 @@ class Recipe(models.Model):
 class IngredientAmount(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    total = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-
-    def save(self, *args, **kwargs):
-        self.total = calc_total_ingredient(self)
-        super(IngredientAmount, self).save(*args, **kwargs)
 
     def get_formated_amount(self):
         return '{}{}'.format(self.amount, self.unit)

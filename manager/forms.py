@@ -79,12 +79,13 @@ class IngredientAmountForm(forms.ModelForm):
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'image', 'instructions')
         attrs = {
             'class': 'form-control'
         }
         widgets = {
             'name': forms.TextInput(attrs=attrs),
+            'instructions': forms.Textarea(attrs=attrs)
         }
 
     def __init__(self, *args, **kwargs):
@@ -93,11 +94,14 @@ class RecipeForm(forms.ModelForm):
         self.helper.form_tag = True
         self.helper.form_show_labels = False
         self.helper.label_class = 'd-block text-center'
-        # self.helper.field_class = 'form-group'
         self.helper.layout = Layout(
             Div(
+                HTML('<label class="d-block" for="id_image">Image:</label>'),
+                Field('image'),
                 HTML('<label class="d-block text-center" for="id_name">Tell us your recipe name:</label>'),
-                Field('name', ), css_class='form-group'
+                Field('name', ),
+                HTML('<label class="d-block text-center my-2" for="id_instructions">Instructions:</label>'),
+                Field('instructions'), css_class='form-group'
             ),
             HTML('<h4 class="gray-color">Ingredients</h4><hr>'),
             Fieldset('', Formset('formset')),

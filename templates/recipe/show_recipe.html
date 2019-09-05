@@ -4,12 +4,32 @@
 {% block content %}
     <div class="card w-100">
         <div class="card-body">
-            <h3 class="orange_color text-center"><a href="{% url 'recipe-show-all' %}"><i
-                    class="fas fa-arrow-left float-left nav-link text-black-50"></i></a>{{ recipe.name }} </h3>
+            <div class="d-flex justify-content-center">
+                {% if recipe.image %}
+                    <img class="img-fluid rounded cover-recipe " src="{{ recipe.image.url }}"
+                         alt="recipe-cover">
+                {% else %}
+                    <img class="img-fluid rounded cover-recipe float-left"
+                         src="{% static 'images/not_found_recipe.jpg' %}" alt="recipe-cover">
+                {% endif %}
+                <div class="w-100">
+                    <legend class="gray-color text-center">{{ recipe.name }}</legend>
+                </div>
+            </div>
             <hr>
-            <legend class="text-black-50 text-center">Ingredients</legend>
+            <legend class="gray-color">Instructions</legend>
+
+            {% if recipe.instructions %}
+                {{ recipe.instructions }}
+            {% else %}
+                <p class="text-center">No instructions</p>
+            {% endif %}
+            <hr>
+
+
+            <legend class="gray-color">Ingredients</legend>
             <table class="table">
-                <thead class="thead-brown">
+                <thead class="">
                 <tr>
                     <th class="w-25">Name</th>
                     <th class="w-25">Amount</th>

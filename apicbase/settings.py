@@ -102,16 +102,13 @@ PUBLIC_PATHS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'recp',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '1385126',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     },
 }
-
-# DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
-# del DATABASES['default']['OPTIONS']['sslmode']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

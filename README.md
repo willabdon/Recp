@@ -14,3 +14,11 @@
 8. The you can run the application: `python manage.py runserver`
 9. Access the url [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
+## Docker Installation
+
+1. Clone this repository: `git clone https://github.com/willabdon/Recp.git`.
+2. `cd` into `Recp`.
+3. run `docker-compose up`
+4. Access the url [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+
